@@ -15,6 +15,7 @@ class TTTMealyLearner(TTTAbstractLearner):
         cur_dtree_node = self.DTree.root
         prev_dtree_node = None
 
+        response: str|None = None
         while not cur_dtree_node is None and not cur_dtree_node.isLeaf:
             # Figure out which branch we should follow
             seq = sequence + cur_dtree_node.suffix
@@ -34,6 +35,7 @@ class TTTMealyLearner(TTTAbstractLearner):
             new_state = State(f's{len(self.S)}')
             new_dtree_node = self.DTree.createLeaf(new_state)
             self.S[new_acc_seq] = new_state
+            assert response is not None
             prev_dtree_node.add(response, new_dtree_node)
             cur_dtree_node = new_dtree_node
 

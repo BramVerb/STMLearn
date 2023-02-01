@@ -1,11 +1,7 @@
-import subprocess
-import tempfile
 from graphviz import Digraph
 from stmlearn.suls import MealyMachine, DFA
-import re
-from pathlib import Path
-from os.path import abspath
 
+import itertools
 def _render(fsm: MealyMachine, filename):
     states = sorted(fsm.get_states(), key=lambda x: int(x.name.strip('s')))
     alphabet = sorted(fsm.get_alphabet())
@@ -32,8 +28,21 @@ def check_distinguishing_set(fsm, dset):
         print("Dset outputs not unique!")
         print('Dset size:', len(dset))
         print("Dset: ", dset)
-        print("Outputs:", list(outputs.values()))
-        return False
+        # print("Outputs:", list(outputs.values()))
+        # print("Outputs", outputs)
+        for (ka, va), (kb, vb) in itertools.product(outputs.items(), outputs.items()):
+            if ka != kb and va == vb:
+                print(va, vb)
+                ma = MealyMachine(initial_state=ka)
+                mb = MealyMachine(initial_state=kb)
+                render_options = {'ignore_edges': ['invalid_input']}
+                ma.render_graph(filename='/tmp/out/ma.pdf', render_options=render_options)
+                mb.render_graph(filename='/tmp/out/mb.pdf', render_options=render_options)
+                print('names', ka.name, kb.name)
+        
+        input("NOT MINIMAL, enter to continue")
+        return True
+        # return False
     else:
         print('Dset succes!', len(outputs), 'states,', len(set(outputs)), 'unique outputs')
         print('Dset size:', len(dset))
