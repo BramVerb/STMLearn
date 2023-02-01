@@ -36,6 +36,7 @@ class TTTMealyLearner(TTTAbstractLearner):
             new_dtree_node = self.DTree.createLeaf(new_state)
             self.S[new_acc_seq] = new_state
             assert response is not None
+            assert prev_dtree_node is not None
             prev_dtree_node.add(response, new_dtree_node)
             cur_dtree_node = new_dtree_node
 
