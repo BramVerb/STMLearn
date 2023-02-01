@@ -176,6 +176,7 @@ class MealyMachine(SUL):
                 g.render(format=format, view=True)
             else:
                 g.save()
+        render(filename, render_options)
 
-        renderthread = threading.Thread(target=render, args=(filename, render_options))
-        renderthread.start()
+        # renderthread = threading.Thread(target=render, args=(filename, render_options))
+        # renderthread.start()
