@@ -136,6 +136,7 @@ class MealyMachine(SUL):
 
             # Draw initial state
             g.attr('node', shape='circle')
+            g.attr('edge', colorscheme='dark28')
 
             if self.initial_state in node_color:
                 g.node(self.initial_state.name, color=node_color[self.initial_state], style='filled')
@@ -169,7 +170,7 @@ class MealyMachine(SUL):
 
                     if (not (any([output.startswith(x) for x in ignore_self_edges]) and other_state == cur_state)) \
                             and not (any([output.startswith(x) for x in ignore_edges])):
-                        g.edge(cur_state.name, other_state.name, label=f'{action}/{output}')
+                        g.edge(cur_state.name, other_state.name, label=f'{action}/{output}', color=f'{action}')
 
             if format != None:
                 g.render(format=format, view=True)
