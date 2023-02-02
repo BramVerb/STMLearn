@@ -154,7 +154,7 @@ class LStarMealyLearner(Learner):
         return self
 
     # Membership query
-    def query(self, query):
+    def query(self, query) -> str | None:
         return self.teacher.member_query(query)
         if query in self.T.keys():
             return self.T[query]
@@ -189,7 +189,7 @@ class LStarMealyLearner(Learner):
 
     # row(s), s in S ∪ S·A
     @depends_on_S_E
-    def _get_row(self, s: Tuple):
+    def _get_row(self, s: Tuple) -> list[str | None]:
         if s not in self._SUSA():
             raise Exception("s not in S ∪ S·A")
 
@@ -237,22 +237,24 @@ class LStarMealyLearner(Learner):
 
         rows = []
 
-        S = sorted([self._tostr(a) for a in list(self.S)])
-        SA = sorted([self._tostr(a) for a in list(self._SA())])
-        E = sorted([self._tostr(e) for e in self.E]) if len(self.E) > 0 else []
+        # S = sorted([self._tostr(a) for a in list(self.S)])
+        # SA = sorted([self._tostr(a) for a in list(self._SA())])
+        # E = sorted([self._tostr(e) for e in self.E]) if len(self.E) > 0 else []
 
-        rows.append([" ", "T"] + E)
-        for s in S:
-            row = ["S", s]
-            for e in E:
-                row.append(self.query(self._rebuildquery(f'{s},{e}')))
+        rows.append([" ", "T"] + list(map(str, self.E)))
+        for s in self.S:
+            row = ["S", str(s)]
+            # for e in E:
+            #     row.append(self._get_row(self._rebuildquery(f'{s},{e}')))
+            row.extend(map(str, self._get_row(s)))
             rows.append(row)
 
         rows_sa = []
-        for sa in SA:
-            row = ["SA", sa]
-            for e in E:
-                row.append(self.query(self._rebuildquery(f'{sa},{e}')))
+        for sa in self._SA():
+            row = ["SA", str(sa)]
+            # for e in E:
+            #     row.append(self.query(self._rebuildquery(f'{sa},{e}')))
+            row.extend(map(str, self._get_row(sa)))
             rows_sa.append(row)
 
         print(tabulate(rows + rows_sa, headers="firstrow",tablefmt="fancy_grid"))
